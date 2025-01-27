@@ -65,12 +65,14 @@ const main = async () => {
     const fileContent = await readFromDocsDatabase()
     const unprocessedDocs = fileContent.filter(({ processed }) => !processed)
 
-    for (const doc of unprocessedDocs) {
+    for (const i in unprocessedDocs) {
+        const doc = unprocessedDocs[i]
         const { url } = await getDocDownloadUrl(doc);
         const downloadedDoc = await downloadDoc(url)
         await saveFile(doc.nameDoc, downloadedDoc);
         await setDocumentAsProcessed(doc)
-        await sleep(1000)
+        await sleep(50)
+        console.info(`📥 ${parseInt(i, 10) + 1}/${unprocessedDocs.length} processed`)
     }
 }
 
